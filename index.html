@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <!--由HDG借助DeepSeek编写-->
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="https://pic1.imgdb.cn/item/67d5356588c538a9b5bea29f.png"
+    />
+    <title>星际方舟计划 - 寻找第二地球</title>
+    <style>
+      :root {
+        --primary-color: #2a2e3d;
+        --accent-color: #00f3ff;
+        --text-color: #e0e0e0;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Inter", sans-serif;
+      }
+
+      body {
+        background: var(--primary-color);
+        color: var(--text-color);
+        line-height: 1.6;
+      }
+
+      .parallax {
+        height: 110vh;
+        background: linear-gradient(45deg, #1a1a1a 0%, #2d3436 100%);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .stars {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+      }
+
+      .hero {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        z-index: 1;
+      }
+
+      .hero h1 {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        background: linear-gradient(90deg, #00f3ff, #0066ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: titleFloat 3s ease-in-out infinite;
+      }
+
+      @keyframes titleFloat {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+
+      .content-section {
+        padding: 3rem 10%;
+        padding-bottom: inherit;
+      }
+
+      /* 导航栏样式 */
+      .main-nav {
+        position: fixed;
+        top: -60px;
+        left: 0;
+        right: 0;
+        background: rgba(42, 46, 61, 0.95);
+        backdrop-filter: blur(10px);
+        z-index: 1000;
+        transition: top 0.5s ease;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      }
+
+      .main-nav.visible {
+        top: 0;
+      }
+
+      /* 修改导航栏布局 */
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+	padding: 1rem;
+}
+
+        .nav-link {
+            color: var(--accent-color);
+            text-decoration: none;
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+            width: 0;
+            height: 2px;
+            background: currentColor;
+            transition: width 0.3s;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+.nav-left, .nav-right {
+    display: flex;
+    gap: 2rem;
+}
+
+/* GitHub图标样式 */
+.github-icon {
+    margin-right: 0.5rem;
+    vertical-align: middle;
+}
+
+/* 关于弹出层样式 */
+.about-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(5px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.modal-content {
+    background: var(--primary-color);
+    padding: 2rem;
+    border-radius: 8px;
+    width: min(90%, 500px);
+    border: 1px solid var(--accent-color);
+    position: relative;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: var(--accent-color);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0 0.5rem;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .nav-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .nav-left, .nav-right {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .github-icon {
+        width: 16px;
+        height: 16px;
+    }
+}
+
+      #history {
+        padding-top: 5rem;
+      }
+
+      @media (max-width: 768px) {
+        .content-section {
+          padding: 2rem 5%;
+          padding-bottom: inherit;
+        }
+
+        #history {
+          padding-top: 3rem;
+        }
+      }
+
+      .visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .compare-slider {
+        position: relative;
+        width: 100%;
+        padding-top: 100%;
+        margin: 2rem auto;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 243, 255, 0.2);
+      }
+
+      .slider-inner {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .compare-img {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        user-select: none;
+      }
+
+      .after-img {
+        z-index: 0;
+      }
+
+      .before-img {
+        z-index: 1;
+        clip-path: inset(0 50% 0 0);
+        transition: clip-path 0.1s ease-out;
+      }
+
+      .slider-handle {
+        position: absolute;
+        left: 50%;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: rgba(0, 243, 255, 0.8);
+        cursor: ew-resize;
+        transform: translateX(-50%);
+        transition: left 0.1s ease-out;
+        z-index: 2;
+      }
+
+      .slider-handle::after {
+        content: "";
+        position: absolute;
+        left: -8px;
+        top: 50%;
+        width: 16px;
+        height: 16px;
+        background: rgba(0, 243, 255, 0.9);
+        border-radius: 50%;
+        transform: translateY(-50%);
+        box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+      }
+
+      @keyframes starGlow {
+        0%,
+        100% {
+          opacity: 0.3;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
+      @keyframes starDrift {
+        0% {
+          transform: translate(0, 0);
+        }
+        100% {
+          transform: translate(calc(5px * var(--dx)), calc(3px * var(--dy)));
+        }
+      }
+
+      .star {
+        position: absolute;
+        border-radius: 50%;
+        animation:
+          starGlow var(--glow-duration) ease-in-out infinite alternate,
+          starDrift var(--drift-duration) linear infinite alternate;
+        will-change: transform, opacity;
+      }
+
+      .card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin: 3rem 0;
+      }
+
+      .science-card {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 2rem;
+        border-radius: 15px;
+        border: 1px solid var(--accent-color);
+        transition: transform 0.3s ease;
+      }
+
+      .science-card:hover {
+        transform: translateY(-10px);
+      }
+
+      @media (min-width: 1024px) {
+        .compare-slider {
+          padding-top: 60vh;
+          max-width: 80vw;
+        }
+
+        .compare-img {
+          object-position: center top;
+        }
+
+        .slider-inner::after {
+          content: "";
+          position: absolute;
+          top: 50%;
+          left: 0;
+          right: 0;
+          height: 100%;
+          transform: translateY(-50%);
+          box-shadow: inset 0 0 100px 20px rgba(42, 46, 61, 0.8);
+          pointer-events: none;
+          z-index: 3;
+        }
+      }
+
+      @media (max-width: 1023px) {
+        .compare-slider {
+          padding-top: 100%;
+        }
+      }
+
+      .sci-meter {
+        height: 4px;
+        background: rgba(255, 255, 255, 0.2);
+        margin-top: 1rem;
+        position: relative;
+      }
+      .sci-meter::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        background: var(--accent-color);
+        width: attr(data-value);
+      }
+
+      .timeline {
+        position: relative;
+        padding: 3rem 0;
+      }
+
+      .timeline::before {
+        content: "";
+        position: absolute;
+        left: calc(120px + 1rem);
+        top: 20px;
+        bottom: 20px;
+        width: 2px;
+        background: linear-gradient(
+          to bottom,
+          transparent 0%,
+          var(--accent-color) 30% 70%,
+          transparent 100%
+        );
+        z-index: 0;
+      }
+
+      .timeline-item {
+        display: flex;
+        margin-bottom: 4rem;
+        position: relative;
+        z-index: 1;
+        opacity: 0;
+        transform: translateX(-30px);
+        transition: all 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+      }
+
+      .timeline-item.visible {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      .timeline-date {
+        width: 140px;
+        padding-right: 2rem;
+        padding-top: 1.3rem;
+        text-align: right;
+        font-size: 1.1rem;
+        color: #8be9fd;
+        font-family: "Courier New", monospace;
+        letter-spacing: 1px;
+      }
+
+      .timeline-content {
+        flex: 1;
+        padding: 1.5rem 2.5rem;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+        border: 1px solid rgba(0, 243, 255, 0.2);
+        position: relative;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      .timeline-content::before {
+        content: "";
+        position: absolute;
+        left: -14px;
+        top: 29px;
+        width: 20px;
+        height: 20px;
+        background: var(--accent-color);
+        border-radius: 50%;
+        box-shadow: 0 0 15px rgba(0, 243, 255, 0.5);
+      }
+
+      .timeline-content::after {
+        content: "";
+        position: absolute;
+        left: -10px;
+        top: 33px;
+        width: 12px;
+        height: 12px;
+        background: var(--primary-color);
+        border-radius: 50%;
+      }
+
+      /* 移动端适配 (≤768px) */
+      @media (max-width: 768px) {
+        .timeline::before {
+          left: 28px;
+          top: 40px;
+          bottom: 40px;
+        }
+
+        .timeline-item {
+          flex-direction: column;
+          margin-bottom: 2.5rem;
+        }
+
+        .timeline-date {
+          width: 100%;
+          text-align: left;
+          padding: 0 0 0.8rem 3.5rem; 
+          font-size: 1rem; 
+          letter-spacing: 0.5px;
+        }
+
+        .timeline-content {
+          margin-left: 1.5rem;
+          padding: 1.2rem 1.8rem;
+        }
+
+        .timeline-content::before {
+          left: -6px;
+          top: -38px;
+          width: 18px;
+          height: 18px;
+        }
+
+        .timeline-content::after {
+          left: -2px;
+          top: -34px;
+          width: 10px;
+          height: 10px;
+        }
+
+        .timeline-content h3 {
+          font-size: 1.1rem;
+          line-height: 1.4;
+        }
+
+        .tech-list li {
+          font-size: 0.95rem;
+          padding-left: 1.2rem;
+        }
+      }
+
+      .timeline-item {
+        visibility: visible;
+      }
+
+      .timeline-item {
+        opacity: 0;
+        transform: translateX(-30px);
+        transition: all 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+      }
+
+      .timeline-item.visible {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      .parallax::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 20vh;
+        background: linear-gradient(
+          to bottom,
+          transparent 0%,
+          var(--primary-color) 90%
+        );
+        z-index: 1;
+      }
+
+      .stars::before {
+        content: "";
+        position: absolute;
+        bottom: -50px;
+        left: 50%;
+        width: 200%;
+        height: 100px;
+        background: radial-gradient(
+          circle at 50% 0%,
+          rgba(0, 243, 255, 0.2) 0%,
+          transparent 70%
+        );
+        transform: translateX(-50%);
+        filter: blur(30px);
+        animation: dustGlow 4s ease-in-out infinite;
+      }
+
+      @keyframes dustGlow {
+        0%,
+        100% {
+          opacity: 0.3;
+          transform: translateX(-50%) scale(0.95);
+        }
+        50% {
+          opacity: 0.7;
+          transform: translateX(-50%) scale(1.05);
+        }
+      }
+
+      .content-section::before {
+        content: "";
+        position: absolute;
+        top: -50px;
+        left: 0;
+        right: 0;
+        height: 50px;
+        background: linear-gradient(
+          to bottom,
+          rgba(42, 46, 61, 0) 0%,
+          var(--primary-color) 50%
+        );
+        filter: blur(4px);
+        z-index: 2;
+      }
+
+      .scroll-indicator {
+        position: absolute;
+        bottom: 10rem;
+        left: 0;
+        right: 0;
+        margin: 0 auto; 
+        width: 40px; 
+        text-align: center; 
+        cursor: pointer;
+        z-index: 2;
+        animation: titleFloat 3s ease-in-out infinite;
+        opacity: 0.8;
+        transition: all 0.3s;
+      }
+
+      .scroll-indicator svg {
+        color: var(--accent-color);
+        filter: drop-shadow(0 0 8px rgba(0, 243, 255, 0.5));
+      }
+
+      .scroll-indicator:hover {
+        opacity: 1;
+        transform: scale(1.2); 
+      }
+
+      .scroll-indicator.hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="main-nav">
+    <div class="nav-container">
+        <div class="nav-left">
+            <a href="#history" class="nav-link">末日的警示</a>
+            <a href="#science" class="nav-link">新地球标准</a>
+            <a href="#future" class="nav-link">星海征程</a>
+        </div>
+        <div class="nav-right">
+            <a href="https://github.com/yourusername" class="nav-link" target="_blank">
+                <svg class="github-icon" viewBox="0 0 16 16" width="20" height="20">
+                    <path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+                </svg>
+                GitHub
+            </a>
+            <button class="nav-link about-btn">关于</button>
+        </div>
+    </div>
+</nav>
+
+<!-- 添加弹出层 -->
+<div class="about-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>关于本项目</h3>
+            <button class="close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>这是一个科普与科幻结合的互动网站，旨在通过可视化手段展示人类寻找第二地球的必要性和可能性。</p>
+            <p>技术栈：HTML5 / CSS3 / JavaScript</p>
+            <p>作者：HDG</p>
+            <p>版本：1.0.0</p>
+        </div>
+    </div>
+</div>
+    <div class="parallax">
+      <div class="stars"></div>
+      <div class="hero">
+        <h1>星际方舟计划</h1>
+        <p>寻找人类文明的新摇篮</p>
+      </div>
+      <div class="scroll-indicator" onclick="scrollToContent()">
+        <svg viewBox="0 0 24 24" width="40" height="40">
+          <path
+            fill="currentColor"
+            d="M12 17.414l-5.707-5.707 1.414-1.414L12 14.586l4.293-4.293 1.414 1.414L12 17.414z"
+          />
+        </svg>
+      </div>
+    </div>
+
+    <section class="content-section" id="history">
+      <h2>末日的警示</h2>
+      <div class="compare-slider">
+        <div class="slider-inner">
+          <img
+            data-src="https://pic1.imgdb.cn/item/67d4fe8088c538a9b5be2a30.jpg"
+            alt="战后废墟"
+            class="compare-img after-img"
+          />
+          <img
+            data-src="https://pic1.imgdb.cn/item/67d4fea088c538a9b5be2aac.jpg"
+            alt="战前城市"
+            class="compare-img before-img"
+          />
+          <div class="slider-handle"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section" id="science">
+      <h2>新地球标准</h2>
+      <div class="card-grid">
+        <div class="science-card">
+          <h3>🜄 大气构成</h3>
+          <p>氧含量21%±3% | CO₂＜0.1% | 臭氧层厚度0.3-0.5 DU</p>
+          <div class="sci-meter" data-value="0.78"></div>
+        </div>
+
+        <div class="science-card">
+          <h3>🜋 液态水循环</h3>
+          <p>地表水覆盖率≥40% | 水分子极性指数5.8-6.2 | 盐度＜3.5%</p>
+          <div class="sci-meter" data-value="0.65"></div>
+        </div>
+
+        <div class="science-card">
+          <h3>⨁ 行星磁场</h3>
+          <p>磁层强度≥0.5G | 范艾伦带覆盖率＞85% | 太阳风偏转率92%</p>
+          <div class="sci-meter" data-value="0.92"></div>
+        </div>
+
+        <div class="science-card">
+          <h3>☀️ 恒星系统</h3>
+          <p>G型主序星 | 宜居带持续＞30亿年 | 耀斑指数＜C级</p>
+          <div class="sci-meter" data-value="1.0"></div>
+        </div>
+
+        <div class="science-card">
+          <h3>🌡️ 热力学平衡</h3>
+          <p>地表温差＜50℃ | 地热梯度25-30℃/km | 反照率0.3-0.35</p>
+          <div class="sci-meter" data-value="0.83"></div>
+        </div>
+
+        <div class="science-card">
+          <h3>⚛️ 重力常数</h3>
+          <p>0.8-1.2G | 自转周期18-30h | 章动角＜23.5°</p>
+          <div class="sci-meter" data-value="0.95"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section" id="future">
+      <h2>星海征程</h2>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-date">2035-2040</div>
+          <div class="timeline-content">
+            <h3>Ⅰ 星门计划启动</h3>
+            <p>建成月球量子望远镜阵列，探测精度达0.01角秒</p>
+            <ul class="tech-list">
+              <li>▸ 光谱分析AI「盖娅」上线</li>
+              <li>▸ 首次捕获系外行星生物信号</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-date">2045-2058</div>
+          <div class="timeline-content">
+            <h3>Ⅱ 方舟原型舰</h3>
+            <p>完成世代飞船"新地平线号"，实现0.1c亚光速巡航</p>
+            <ul class="tech-list">
+              <li>▸ 生态穹顶循环系统实装</li>
+              <li>▸ 人体冬眠损耗降至2%/年</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-date">2060-2080</div>
+          <div class="timeline-content">
+            <h3>Ⅲ 曲速黎明</h3>
+            <p>阿尔库别雷引擎首次突破空间阈值，实现1.7倍光速</p>
+            <ul class="tech-list">
+              <li>▸ 负能量物质稳定化突破</li>
+              <li>▸ 首次载人跃迁实验成功</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-date">2120-2150</div>
+          <div class="timeline-content">
+            <h3>Ⅳ 新伊甸工程</h3>
+            <p>开普勒-452b行星改造计划启动，建立首个人造大气层</p>
+            <ul class="tech-list">
+              <li>▸ 纳米机械生态系统部署</li>
+              <li>▸ 行星级磁极生成器上线</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-date">2200+</div>
+          <div class="timeline-content">
+            <h3>Ⅴ 星河联邦</h3>
+            <p>人类文明跨越12光年，建立首个星际生态保护区</p>
+            <ul class="tech-list">
+              <li>▸ 戴森球能源网络建成</li>
+              <li>▸ 宇宙生态伦理宪章颁布</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      // 滚动动画
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+            }
+          });
+        },
+        { threshold: 0.1 },
+      );
+
+      document.querySelectorAll(".content-section").forEach((section) => {
+        observer.observe(section);
+      });
+
+      // 动态星空
+      function createStars() {
+        const container = document.querySelector(".stars");
+        const starCount = window.innerWidth > 768 ? 300 : 150;
+
+        for (let i = 0; i < starCount; i++) {
+          const star = document.createElement("div");
+          star.className = "star";
+
+          const size = Math.random() * 3;
+          const glowDuration = 1 + Math.random() * 4 + "s";
+          const driftDuration = 20 + Math.random() * 40 + "s";
+          const dx = (Math.random() - 0.5) * 2;
+          const dy = (Math.random() - 0.5) * 0.5;
+
+          star.style.cssText = `
+                    width: ${size}px;
+                    height: ${size}px;
+                    background: rgba(255,255,255,${0.5 + Math.random() * 0.5});
+                    top: ${Math.random() * 100}%;
+                    left: ${Math.random() * 100}%;
+                    --glow-duration: ${glowDuration};
+                    --drift-duration: ${driftDuration};
+                    --dx: ${dx};
+                    --dy: ${dy};
+                    animation-delay: ${Math.random() * 5}s;
+                `;
+
+          container.appendChild(star);
+        }
+      }
+      createStars();
+
+      // 图片对比组件
+      const slider = document.querySelector(".compare-slider");
+      const handle = document.querySelector(".slider-handle");
+      const beforeImg = document.querySelector(".before-img");
+      let isDragging = false;
+      let rafId;
+
+      function updateSlider(x) {
+        cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(() => {
+          const rect = slider.getBoundingClientRect();
+          const xPos = Math.min(Math.max(x - rect.left, 0), rect.width);
+          const percentage = (xPos / rect.width) * 100;
+
+          handle.style.left = `${percentage}%`;
+          beforeImg.style.clipPath = `inset(0 ${100 - percentage}% 0 0)`;
+        });
+      }
+
+      function handleMove(e) {
+        if (!isDragging) return;
+        const x = e.touches ? e.touches[0].clientX : e.clientX;
+        updateSlider(x);
+      }
+
+      slider.addEventListener("mousedown", (e) => {
+        isDragging = true;
+        updateSlider(e.clientX);
+        document.addEventListener("mousemove", handleMove);
+      });
+
+      slider.addEventListener("touchstart", (e) => {
+        isDragging = true;
+        updateSlider(e.touches[0].clientX);
+        document.addEventListener("touchmove", handleMove);
+      });
+
+      const endDrag = () => {
+        isDragging = false;
+        document.removeEventListener("mousemove", handleMove);
+        document.removeEventListener("touchmove", handleMove);
+      };
+
+      document.addEventListener("mouseup", endDrag);
+      document.addEventListener("touchend", endDrag);
+
+      // 图片懒加载
+      function lazyLoadImages() {
+        const images = document.querySelectorAll("img[data-src]");
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                const img = entry.target;
+                img.src = img.dataset.src;
+                img.removeAttribute("data-src");
+                observer.unobserve(img);
+              }
+            });
+          },
+          { rootMargin: "200px" },
+        );
+
+        images.forEach((img) => observer.observe(img));
+      }
+      lazyLoadImages();
+
+      // 初始化
+      function initSlider() {
+        const rect = slider.getBoundingClientRect();
+        const initialX = rect.left + rect.width / 2;
+        updateSlider(initialX);
+      }
+      initSlider();
+
+      // 动态调整PC端图片展示
+      function adjustForPC() {
+        if (window.innerWidth < 1024) return;
+
+        const slider = document.querySelector(".compare-slider");
+        const images = document.querySelectorAll(".compare-img");
+
+        // 计算最佳展示高度
+        const viewportHeight = window.innerHeight * 0.6;
+        const aspectRatio = slider.offsetWidth / viewportHeight;
+
+        images.forEach((img) => {
+          // 自动选择裁切区域
+          const imgAspect = img.naturalWidth / img.naturalHeight;
+          img.style.objectPosition =
+            aspectRatio > imgAspect ? "center top" : "center center";
+        });
+      }
+
+      // 窗口尺寸变化时重新计算
+      let resizeTimer;
+      window.addEventListener("resize", () => {
+        adjustForPC();
+        // 防抖处理
+        clearTimeout(window.resizeTimer);
+        window.resizeTimer = setTimeout(() => {
+          document.querySelector(".stars").innerHTML = "";
+          createStars();
+          initSlider();
+        }, 100);
+      });
+
+      function initTimelineObserver() {
+        const timelineObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("visible");
+              }
+            });
+          },
+          {
+            threshold: 0.1,
+            rootMargin: "-50px 0px",
+          },
+        );
+
+        document.querySelectorAll(".timeline-item").forEach((item) => {
+          timelineObserver.observe(item);
+        });
+      }
+
+      // 初始化所有功能
+      function initAll() {
+        // 保持原有初始化代码...
+        initTimelineObserver();
+        adjustForPC();
+      }
+
+      // 确保在DOM加载完成后初始化
+      if (document.readyState === "complete") {
+        initAll();
+      } else {
+        window.addEventListener("load", initAll);
+      }
+
+      // 平滑滚动函数
+      function scrollToContent() {
+        document.querySelector("#history").scrollIntoView({
+          behavior: "smooth",
+        });
+      }
+
+      // 滚动监听隐藏箭头
+      let lastScroll = 0;
+      const nav = document.querySelector(".main-nav");
+      const indicator = document.querySelector(".scroll-indicator");
+
+      window.addEventListener("scroll", () => {
+        const currentScroll = window.pageYOffset;
+
+        if (currentScroll > 100) {
+          indicator.classList.add("hidden");
+        } else {
+          indicator.classList.remove("hidden");
+        }
+
+        const starsHeight = document.querySelector(".stars").offsetHeight;
+        if (currentScroll >= starsHeight && currentScroll > lastScroll) {
+          nav.classList.add("visible");
+        } else if (currentScroll < starsHeight || currentScroll < lastScroll) {
+          nav.classList.remove("visible");
+        }
+
+        lastScroll = currentScroll;
+      });
+
+      // 触摸设备兼容
+      let touchStartY = 0;
+      window.addEventListener(
+        "touchstart",
+        (e) => {
+          touchStartY = e.touches[0].clientY;
+        },
+        false,
+      );
+
+      window.addEventListener(
+        "touchmove",
+        (e) => {
+          const touchY = e.touches[0].clientY;
+          if (touchY < touchStartY) {
+            indicator.classList.add("hidden");
+          }
+        },
+        false,
+      );
+
+      // 平滑滚动
+      document.querySelectorAll(".nav-link").forEach((link) => {
+        link.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          target.scrollIntoView({
+            behavior: "smooth",
+          });
+        });
+      });
+
+	  // 弹出层控制
+const aboutBtn = document.querySelector('.about-btn')
+const modal = document.querySelector('.about-modal')
+const closeBtn = document.querySelector('.close-btn')
+
+// 打开弹窗
+aboutBtn.addEventListener('click', () => {
+    modal.style.display = 'flex'
+})
+
+// 关闭弹窗
+closeBtn.addEventListener('click', () => {
+    modal.style.display = 'none'
+})
+
+// 点击外部关闭
+modal.addEventListener('click', (e) => {
+    if(e.target === modal) {
+        modal.style.display = 'none'
+    }
+})
+
+// ESC键关闭
+document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape') {
+        modal.style.display = 'none'
+    }
+})
+    </script>
+  </body>
+</html>
