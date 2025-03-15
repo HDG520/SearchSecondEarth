@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-  <!--由HDG借助DeepSeek编写-->
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -693,15 +692,16 @@
         <div class="nav-left">
           <button class="menu-toggle">目录</button>
           <div class="nav-items">
-            <a href="#history" class="nav-link">末日的警示</a>
-            <a href="#science" class="nav-link">新地球标准</a>
-            <a href="#future" class="nav-link">星海征程</a>
+            <a href="#history" class="nav-link nav-scroll">末日的警示</a>
+            <a href="#science" class="nav-link nav-scroll">新地球标准</a>
+            <a href="#future" class="nav-link nav-scroll">星海征程</a>
           </div>
         </div>
         <div class="nav-right">
           <a
             href="https://github.com/HDG520/SearchSecondEarth"
             class="nav-link github-link"
+            target="_blank"
           >
             <svg class="github-icon" viewBox="0 0 16 16" width="20" height="20">
               <path
@@ -1116,7 +1116,7 @@
       );
 
       // 平滑滚动
-      document.querySelectorAll(".nav-link").forEach((link) => {
+      document.querySelectorAll(".nav-scroll").forEach((link) => {
         link.addEventListener("click", function (e) {
           e.preventDefault();
           const target = document.querySelector(this.getAttribute("href"));
